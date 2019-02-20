@@ -13,7 +13,7 @@ def add_basic_payment(amount):
     return add_complex_payment(
         payee="AUTOMATIC",
         account_from="Liabilities:Karta kredytowa",
-        account_to="Uncategorized",
+        account_to="Expenses:Uncategorized",
         amount=amount,
     )
 
