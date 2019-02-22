@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from flask import Flask
+from flask import Flask, Response
 from flask_api import status
 import os
 
@@ -32,3 +32,9 @@ def add_complex_payment(account_from, account_to, payee, amount):
     )
     entry.store(LEDGER_PATH)
     return str(entry), status.HTTP_201_CREATED
+
+
+@app.route("/accounts", methods=['GET'])
+def list_accounts():
+    body = "\n".join(ledger.api.accounts(LEDGER_PATH))
+    return Response(body, mimetype="text/plain")
