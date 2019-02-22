@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-import os
 import time
 
 
@@ -38,9 +37,7 @@ class Entry:
     def __str__(self):
         return self.template.format(**vars(self))
 
-    def store(self, ledger_path=None):
-        if ledger_path is None:
-            ledger_path = os.environ['LEDGER_PATH']
+    def store(self, ledger_path):
         with open(ledger_path, 'a') as ledger_file:
             print(self, file=ledger_file)
 
