@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import subprocess
 import time
 
 
@@ -40,6 +41,18 @@ class Entry:
     def store(self, ledger_path):
         with open(ledger_path, 'a') as ledger_file:
             print(self, file=ledger_file)
+
+
+def accounts(ledger_path):
+    return _call(ledger_path, ["accounts"])
+
+
+def _call(ledger_path, args):
+    output = subprocess.check_output(
+        ["ledger", "-f", ledger_path] + args,
+        universal_newlines=True
+    )
+    return output.strip().split("\n")
 
 
 if __name__ == '__main__':
