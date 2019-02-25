@@ -20,11 +20,25 @@ class Entry:
     2019-02-15 Burger King
         Expenses:Food                              19.99 PLN
         Liabilities:Credit Card
+
+    >>> entry = Entry(
+    ...    payee="McDonald's",
+    ...    account_from="Liabilities:Credit Card",
+    ...    account_to="Expenses:Food",
+    ...    amount="4.99 USD",
+    ...    date="2019-02-16",
+    ... )
+
+    >>> print(entry)
+    <BLANKLINE>
+    2019-02-16 McDonald's
+        Expenses:Food                              $4.99
+        Liabilities:Credit Card
     """
 
     template = """
 {date} {payee}
-    {account_to:<34s}  {amount:>12.2f} PLN
+    {account_to:<34s}  {amount:>12}{currency}
     {account_from}
 """.rstrip()
 
@@ -32,8 +46,20 @@ class Entry:
         self.payee = kwargs['payee']
         self.account_from = kwargs['account_from']
         self.account_to = kwargs['account_to']
-        self.amount = float(kwargs['amount'].split()[0])
+        self.amount = "{:.2f}".format(float(kwargs['amount'].split()[0]))
+        self.currency = kwargs['amount'].split()[1]
         self.date = kwargs.get('date', time.strftime("%F"))
+        self.normalize_currency()
+
+    def normalize_currency(self):
+        conversions = {
+            "USD": ("$", ""),
+        }
+        if self.currency in conversions:
+            pre_currency, self.currency = conversions[self.currency]
+            self.amount = "{}{}".format(pre_currency, self.amount)
+        if self.currency:
+            self.currency = " {}".format(self.currency)
 
     def __str__(self):
         return self.template.format(**vars(self))
